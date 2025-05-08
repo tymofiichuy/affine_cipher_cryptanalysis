@@ -8,6 +8,8 @@ set(SOURCE_DIR ${CMAKE_SOURCE_DIR}/src)
 set(MAIN_DIR ${CMAKE_SOURCE_DIR}/main)
 
 set(SOURCES
+    ${SOURCE_DIR}/modular_arithmetic.cpp 
+    ${SOURCE_DIR}/affine_cipher.cpp
 )
 
 include_directories(${SOURCE_DIR})
