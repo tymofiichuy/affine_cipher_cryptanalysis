@@ -4,6 +4,7 @@
 #include<cwchar>
 #include<string>
 #include<fstream>
+#include<iostream>
 
 class modular_arithmetic{
 public:
@@ -28,6 +29,5 @@ private:
 public:
     void set_key(int a, int b); 
     void encrypt(std::string in_file, std::string out_file);
-
-    affine_cipher();
+    void decrypt(std::string in_file, std::string out_file);
 };
