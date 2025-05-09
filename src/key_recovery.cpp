@@ -3,9 +3,25 @@
 
 using namespace std;
 
+// int text_recognition::wch_to_ind(wchar_t wch){
+//     if(wch > 0x449){
+//         return wch-0x431;
+//     }
+//     else{
+//         return wch-0x430;
+//     }
+// }
+
 int text_recognition::wch_to_ind(wchar_t wch){
     if(wch > 0x449){
         return wch-0x431;
+    }
+    //swap 26 and 27
+    if(wch == 0x44B){
+        return 27;
+    }
+        if(wch == 0x44C){
+        return 26;
     }
     else{
         return wch-0x430;
@@ -106,12 +122,14 @@ void key_recovery::top_frequency(vector<bigram>& out){
     }
 }
 
-void key_recovery::decrypt(std::string in_file, std::string out_file, int& a_key, int& b_key){
+void key_recovery::decrypt(std::string in_file, std::string out_file, int& a_key, int& b_key, int skip){
     find_frequency(in_file);
     vector<bigram> top;
     vector<int> solution;
     top.reserve(5);
     top_frequency(top);
+
+    int flag = 0;
 
     affine_cipher af;
     text_recognition tr;
@@ -140,9 +158,14 @@ void key_recovery::decrypt(std::string in_file, std::string out_file, int& a_key
                         af.decrypt(in_file, out_file);
                         //cout << "6";
                         if(tr.recognize(out_file, 0.005f)){
-                            a_key = *iter;
-                            cout << i_0 << " " << j_0 << "  " << i_1 << " " << j_1;
-                            return;
+                            if(flag >= skip){
+                                a_key = *iter;
+                                //cout << i_0 << " " << j_0 << "  " << i_1 << " " << j_1;
+                                return;                                
+                            }
+                            else{
+                                flag++;
+                            }
                         }
                     }
                 }

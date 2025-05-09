@@ -19,6 +19,13 @@ bool affine_cipher::validate_bigram(wchar_t* bigram, int size){
 }
 
 int affine_cipher::wch_to_ind(wchar_t wch){
+    //swap 26 and 27
+    if(wch == 0x44B){
+        return 27;
+    }
+    if(wch == 0x44C){
+        return 26;
+    }
     if(wch > 0x449){
         return wch-0x431;
     }
@@ -28,6 +35,13 @@ int affine_cipher::wch_to_ind(wchar_t wch){
 }
 
 wchar_t affine_cipher::ind_to_wch(int ind){
+    //swap 26 and 27
+    if(ind == 27){
+        return static_cast<wchar_t>(0x44B);
+    }
+    if(ind == 26){
+        return static_cast<wchar_t>(0x44C);
+    }
     if(ind > 25){
         return static_cast<wchar_t>(ind+0x431);
     }

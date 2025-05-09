@@ -37,7 +37,7 @@ private:
 public:
     void find_frequency(std::string file);
     void top_frequency(std::vector<bigram>& out);
-    void decrypt(std::string in_file, std::string out_file, int& a_key, int& b_key);
+    void decrypt(std::string in_file, std::string out_file, int& a_key, int& b_key, int skip);
 
     key_recovery();
 };
