@@ -3,25 +3,16 @@
 
 using namespace std;
 
-// int text_recognition::wch_to_ind(wchar_t wch){
-//     if(wch > 0x449){
-//         return wch-0x431;
-//     }
-//     else{
-//         return wch-0x430;
-//     }
-// }
-
 int text_recognition::wch_to_ind(wchar_t wch){
-    if(wch > 0x449){
-        return wch-0x431;
-    }
     //swap 26 and 27
     if(wch == 0x44B){
         return 27;
     }
         if(wch == 0x44C){
         return 26;
+    }    
+    if(wch > 0x449){
+        return wch-0x431;
     }
     else{
         return wch-0x430;
@@ -130,6 +121,7 @@ void key_recovery::decrypt(std::string in_file, std::string out_file, int& a_key
     top_frequency(top);
 
     int flag = 0;
+    int counter = 0;
 
     affine_cipher af;
     text_recognition tr;
@@ -138,15 +130,12 @@ void key_recovery::decrypt(std::string in_file, std::string out_file, int& a_key
         for(int j_0 = i_0+1; j_0 < 5; j_0++){
             for(int i_1 = 0; i_1 < 5; i_1++){
                 for(int j_1 = i_1+1; j_1 < 5; j_1++){
-                    //cout << "1";
                     x_sub = modular_arithmetic::sub(top_language_frequency[i_0].first*31+top_language_frequency[i_0].last, top_language_frequency[j_0].first*31+top_language_frequency[j_0].last, mod);
                     y_sub = modular_arithmetic::sub(top[i_1].first*31+top[i_1].last, top[j_1].first*31+top[j_1].last, mod);
-                    //cout << "2";
                     solution.resize(0);
                     modular_arithmetic::linear_congruence(x_sub, y_sub, mod, solution);
-                    //cout << "3";
                     for(vector<int>::iterator iter = solution.begin(); iter != solution.end(); iter++){
-                        //cout << "4";
+                        counter++;
                         b_key = modular_arithmetic::sub((top[i_1].first*31+top[i_1].last), *iter*(top_language_frequency[i_0].first*31+top_language_frequency[i_0].last), mod);
                         try{
                             af.set_key(*iter, b_key);
@@ -154,13 +143,11 @@ void key_recovery::decrypt(std::string in_file, std::string out_file, int& a_key
                         catch(runtime_error err){
                             continue;
                         }
-                        //cout << "5";
                         af.decrypt(in_file, out_file);
-                        //cout << "6";
-                        if(tr.recognize(out_file, 0.005f)){
+                        if(tr.recognize(out_file, 0.0005f)){
                             if(flag >= skip){
                                 a_key = *iter;
-                                //cout << i_0 << " " << j_0 << "  " << i_1 << " " << j_1;
+                                cout << "Iterations: " << counter << "\n";
                                 return;                                
                             }
                             else{
